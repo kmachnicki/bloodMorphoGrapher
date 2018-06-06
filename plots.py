@@ -77,19 +77,49 @@ def drawFirstPartOfErythrocytes(show_only):
     fig = plt.gcf()
     fig.set_size_inches(8, 8)
 
-    output(plt, show_only, "czerwone krwinki 1")
-    
+    output(plt, show_only, u"czerwone krwinki 1")
+
 def drawSecondPartOfErythrocytes(show_only):
-    pass
+    f, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True)
+
+    draw(ax1, MCV, MCV_limits, "MCV", u"Czerwone krwinki")
+    draw(ax2, MCH, MCH_limits, "MCH")
+    draw(ax3, MCHC, MCHC_limits, "MCHC")
+    draw(ax4, RDW, RDW_limits, "RDW")
+
+    f.subplots_adjust(hspace=0.1)
+    fig = plt.gcf()
+    fig.set_size_inches(8, 8)
+
+    output(plt, show_only, u"czerwone krwinki 2")
 
 def drawThrombocytes(show_only):
-    pass
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
+
+    draw(ax1, PLT, PLT_limits, "PLT", u"Płytki krwi")
+    draw(ax2, PDW, PDW_limits, "PDW")
+    draw(ax3, MPV, MPV_limits, "MPV")
+
+    f.subplots_adjust(hspace=0.1)
+    fig = plt.gcf()
+    fig.set_size_inches(8, 8)
+
+    output(plt, show_only, u"płytki krwi")
 
 def drawLeukocytesAndPlasma(show_only):
-    pass
+    f, (ax1, ax2) = plt.subplots(2, sharex=True)
+
+    draw(ax1, WBC, WBC_limits, "WBC", u"Leukocyty i osocze")
+    draw(ax2, PCT, PCT_limits, "PCT")
+
+    f.subplots_adjust(hspace=0.1)
+    fig = plt.gcf()
+    fig.set_size_inches(8, 8)
+
+    output(plt, show_only, u"leukocyty i osocze")
 
 if __name__ == "__main__":
-    show_only = True
+    show_only = False
     drawFirstPartOfErythrocytes(show_only)
     drawSecondPartOfErythrocytes(show_only)
     drawThrombocytes(show_only)
