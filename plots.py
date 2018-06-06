@@ -1,13 +1,13 @@
-#-*- coding:utf-8 -*-
-from matplotlib import rcParams
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-rcParams['font.family'] = 'Liberation Sans'
-rcParams['font.sans-serif'] = ['Liberation Sans']
-rcParams['text.latex.unicode']=True
-plt.style.use('classic')
+# -*- coding:utf-8 -*-
 
 import numpy as np
+from matplotlib import rcParams
+import matplotlib.pyplot as plt
+
+rcParams['font.family'] = 'Liberation Sans'
+rcParams['font.sans-serif'] = ['Liberation Sans']
+rcParams['text.latex.unicode'] = True
+plt.style.use('classic')
 
 RBC_limits = [4.5, 5.9]
 HGB_limits = [13.5, 18.5]
@@ -43,10 +43,11 @@ PCT = [0.2, 0.2, 0.2, 0.2]
 
 dates = ["18.12.17", "05.02.18", "04.04.18", "06.06.18"]
 
-def draw(ax, data, data_limits, label, title=None):
+def draw(ax, data, data_limits, labels, ylabel, unit, title=None):
     y = list(range(0, len(data)))
     ax.plot(y, data, "bo--")
-    ax.plot((-1, 100), (data_limits[0], data_limits[0]), "g-", linewidth=2)
+    ax.plot((-1, 100), (data_limits[0], data_limits[0]), "g-", linewidth=2,
+            label="%s-%s %s" % (data_limits[0], data_limits[1], unit))
     ax.plot((-1, 100), (data_limits[1], data_limits[1]), "g-", linewidth=2)
     d = data_limits[0] * 0.05
     y_min_lim = min(data_limits[0] - d, min(data) - d)
@@ -55,7 +56,11 @@ def draw(ax, data, data_limits, label, title=None):
     ax.set_xlim(np.min(y) - 0.2, np.max(y) + 0.2)
     if title is not None:
         ax.set_title(title, weight="semibold", size="medium")
-    ax.set_ylabel(label, weight="semibold", size="medium")
+    ax.set_ylabel(ylabel, weight="semibold", size="medium")
+    ax.set_xticks(range(len(labels)))
+    ax.set_xticklabels(labels)
+    legend_location = "upper left" if abs(data_limits[0] - data[0]) < abs(data_limits[1] - data[0]) else "lower left"
+    ax.legend(loc=legend_location, prop={"size":10})
     ax.grid()
     for x, y in enumerate(data):
         ax.annotate(y, (x, y), ha="center", va="bottom", weight="semibold", size="medium")
@@ -69,9 +74,9 @@ def output(plt, show_only, filename):
 def drawFirstPartOfErythrocytes(show_only):
     f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
 
-    draw(ax1, RBC, RBC_limits, "RBC", u"Czerwone krwinki")
-    draw(ax2, HGB, HGB_limits, "HGB")
-    draw(ax3, HCT, HCT_limits, "HCT")
+    draw(ax1, RBC, RBC_limits, dates, "RBC", "[mln/µl]", u"Czerwone krwinki")
+    draw(ax2, HGB, HGB_limits, dates, "HGB ", "[g/dl]")
+    draw(ax3, HCT, HCT_limits, dates, "HCT", "[%]")
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
@@ -82,10 +87,10 @@ def drawFirstPartOfErythrocytes(show_only):
 def drawSecondPartOfErythrocytes(show_only):
     f, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True)
 
-    draw(ax1, MCV, MCV_limits, "MCV", u"Czerwone krwinki")
-    draw(ax2, MCH, MCH_limits, "MCH")
-    draw(ax3, MCHC, MCHC_limits, "MCHC")
-    draw(ax4, RDW, RDW_limits, "RDW")
+    draw(ax1, MCV, MCV_limits, dates, "MCV", "[fl]", u"Czerwone krwinki")
+    draw(ax2, MCH, MCH_limits, dates, "MCH", "[pg]")
+    draw(ax3, MCHC, MCHC_limits, dates, "MCHC", "[g/dl]")
+    draw(ax4, RDW, RDW_limits, dates, "RDW", "[%]")
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
@@ -96,9 +101,9 @@ def drawSecondPartOfErythrocytes(show_only):
 def drawThrombocytes(show_only):
     f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
 
-    draw(ax1, PLT, PLT_limits, "PLT", u"Płytki krwi")
-    draw(ax2, PDW, PDW_limits, "PDW")
-    draw(ax3, MPV, MPV_limits, "MPV")
+    draw(ax1, PLT, PLT_limits, dates, "PLT", "[tys/µl]", u"Płytki krwi")
+    draw(ax2, PDW, PDW_limits, dates, "PDW", "[%]")
+    draw(ax3, MPV, MPV_limits, dates, "MPV", "[fl]")
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
@@ -109,8 +114,8 @@ def drawThrombocytes(show_only):
 def drawLeukocytesAndPlasma(show_only):
     f, (ax1, ax2) = plt.subplots(2, sharex=True)
 
-    draw(ax1, WBC, WBC_limits, "WBC", u"Leukocyty i osocze")
-    draw(ax2, PCT, PCT_limits, "PCT")
+    draw(ax1, WBC, WBC_limits, dates, "WBC", "[tys/µl]", u"Leukocyty i osocze")
+    draw(ax2, PCT, PCT_limits, dates, "PCT", "[%]")
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
