@@ -85,18 +85,28 @@ def drawFirstPartOfErythrocytes(show_only):
     output(plt, show_only, u"czerwone krwinki 1")
 
 def drawSecondPartOfErythrocytes(show_only):
-    f, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True)
+    f, (ax1, ax2) = plt.subplots(2, sharex=True)
 
     draw(ax1, MCV, MCV_limits, dates, "MCV", "[fl]", u"Czerwone krwinki")
     draw(ax2, MCH, MCH_limits, dates, "MCH", "[pg]")
-    draw(ax3, MCHC, MCHC_limits, dates, "MCHC", "[g/dl]")
-    draw(ax4, RDW, RDW_limits, dates, "RDW", "[%]")
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
     fig.set_size_inches(8, 8)
 
     output(plt, show_only, u"czerwone krwinki 2")
+
+def drawThirdPartOfErythrocytes(show_only):
+    f, (ax1, ax2) = plt.subplots(2, sharex=True)
+
+    draw(ax1, MCHC, MCHC_limits, dates, "MCHC", "[g/dl]", u"Czerwone krwinki")
+    draw(ax2, RDW, RDW_limits, dates, "RDW", "[%]")
+
+    f.subplots_adjust(hspace=0.1)
+    fig = plt.gcf()
+    fig.set_size_inches(8, 8)
+
+    output(plt, show_only, u"czerwone krwinki 3")
 
 def drawThrombocytes(show_only):
     f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
@@ -127,5 +137,6 @@ if __name__ == "__main__":
     show_only = False
     drawFirstPartOfErythrocytes(show_only)
     drawSecondPartOfErythrocytes(show_only)
+    drawThirdPartOfErythrocytes(show_only)
     drawThrombocytes(show_only)
     drawLeukocytesAndPlasma(show_only)
