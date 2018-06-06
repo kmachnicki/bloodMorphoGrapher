@@ -43,72 +43,54 @@ PCT = [0.2, 0.2, 0.2, 0.2]
 
 dates = ["18.12.17", "05.02.18", "04.04.18", "06.06.18"]
 
-def drawFirstPartOfErythrocytes():
+def draw(ax, data, data_limits, label, title=None):
+    y = list(range(0, len(data)))
+    ax.plot(y, data, "bo--")
+    ax.plot((-1, 100), (data_limits[0], data_limits[0]), "g-", linewidth=2)
+    ax.plot((-1, 100), (data_limits[1], data_limits[1]), "g-", linewidth=2)
+    d = data_limits[0] * 0.05
+    y_min_lim = min(data_limits[0] - d, min(data) - d)
+    y_max_lim = max(data_limits[1] + d, max(data) + d)
+    ax.set_ylim(y_min_lim, y_max_lim)
+    ax.set_xlim(np.min(y) - 0.2, np.max(y) + 0.2)
+    if title is not None:
+        ax.set_title(title, weight="semibold", size="medium")
+    ax.set_ylabel(label, weight="semibold", size="medium")
+    ax.grid()
+    for x, y in enumerate(data):
+        ax.annotate(y, (x, y), ha="center", va="bottom", weight="semibold", size="medium")
+
+def output(plt, show_only, filename):
+    if show_only is True:
+        plt.show()
+    else:
+        plt.savefig(u"%s.pdf" % (filename), bbox_inches='tight')
+
+def drawFirstPartOfErythrocytes(show_only):
     f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
 
-    y = list(range(0, len(RBC)))
-    ax1.plot(y, RBC, "bo--", label = u"RBC")
-    ax1.plot((-1, 100), (RBC_limits[0], RBC_limits[0]), "g-", linewidth=2)
-    ax1.plot((-1, 100), (RBC_limits[1], RBC_limits[1]), "g-", linewidth=2)
-    d = RBC_limits[0] * 0.05
-    y_min_lim = min(RBC_limits[0] - d, min(RBC) - d)
-    y_max_lim = max(RBC_limits[1] + d, max(RBC) + d)
-    ax1.set_ylim(y_min_lim, y_max_lim)
-    ax1.set_xlim(np.min(y) - 0.2, np.max(y) + 0.2)
-    ax1.set_title(u"Czerwone krwinki", weight="semibold", size="medium")
-    ax1.set_ylabel(u"RBC", weight="semibold", size="medium")
-    ax1.grid()
-    for x, y in enumerate(RBC):
-        ax1.annotate(y, (x, y), ha="center", va="bottom", weight="semibold", size="medium")
+    draw(ax1, RBC, RBC_limits, "RBC", u"Czerwone krwinki")
+    draw(ax2, HGB, HGB_limits, "HGB")
+    draw(ax3, HCT, HCT_limits, "HCT")
 
-    y = list(range(0, len(HGB)))
-    ax2.plot(y, HGB, "bo--", label = u"HGB")
-    ax2.plot((-1, 100), (HGB_limits[0], HGB_limits[0]), "g-", linewidth=2)
-    ax2.plot((-1, 100), (HGB_limits[1], HGB_limits[1]), "g-", linewidth=2)
-    d = HGB_limits[0] * 0.05
-    y_min_lim = min(HGB_limits[0] - d, min(HGB) - d)
-    y_max_lim = max(HGB_limits[1] + d, max(HGB) + d)
-    print(y_min_lim)
-    print(y_max_lim)
-    ax2.set_ylim(y_min_lim, y_max_lim)
-    ax2.set_xlim(np.min(y) - 0.2, np.max(y) + 0.2)
-    ax2.set_ylabel(u"HGB", weight="semibold", size="medium")
-    ax2.grid()
-    for x, y in enumerate(HGB):
-        ax2.annotate(y, (x, y), ha="center", va="bottom", weight="semibold", size="medium")
-
-    y = list(range(0, len(HCT)))
-    ax3.plot(y, HCT, "bo--", label = u"HCT")
-    ax3.plot((-1, 100), (HCT_limits[0], HCT_limits[0]), "g-", linewidth=2)
-    ax3.plot((-1, 100), (HCT_limits[1], HCT_limits[1]), "g-", linewidth=2)
-    d = HCT_limits[0] * 0.05
-    y_min_lim = min(HCT_limits[0] - d, min(HCT) - d)
-    y_max_lim = max(HCT_limits[1] + d, max(HCT) + d)
-    ax3.set_ylim(y_min_lim, y_max_lim)
-    ax3.set_xlim(np.min(y) - 0.2, np.max(y) + 0.2)
-    ax3.set_ylabel(u"HCT", weight="semibold", size="medium")
-    ax3.grid()
-    for x, y in enumerate(HCT):
-        ax3.annotate(y, (x, y), ha="center", va="bottom", weight="semibold", size="medium")
-    
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
     fig.set_size_inches(8, 8)
+
+    output(plt, show_only, "czerwone krwinki 1")
     
-    #plt.savefig("%s.pdf" % (filename), bbox_inches='tight')
-    plt.show()
-    
-def drawSecondPartOfErythrocytes():
+def drawSecondPartOfErythrocytes(show_only):
     pass
 
-def drawThrombocytes():
+def drawThrombocytes(show_only):
     pass
 
-def drawLeukocytesAndPlasma():
+def drawLeukocytesAndPlasma(show_only):
     pass
 
 if __name__ == "__main__":
-    drawFirstPartOfErythrocytes()
-    drawSecondPartOfErythrocytes()
-    drawThrombocytes()
-    drawLeukocytesAndPlasma()
+    show_only = True
+    drawFirstPartOfErythrocytes(show_only)
+    drawSecondPartOfErythrocytes(show_only)
+    drawThrombocytes(show_only)
+    drawLeukocytesAndPlasma(show_only)
