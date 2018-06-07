@@ -1,6 +1,6 @@
 # Blood Morphology Grapher
 
-Mały skrypt wyświetlający pod postacią wykresów przebieg wyników badań morfologicznych krwi. Wizualizowane są dane otrzymywane z analizatora Pentra 2 używanego m.in. we Wrocławskim RCKiK. Pozwala to na łatwe śledzenie zmian zachodzących w składzie krwi na przestrzeni czasu. Przykład wykresu najduje się poniżej.
+Mały skrypt wyświetlający pod postacią wykresów przebieg wyników badań morfologicznych krwi. Wizualizowane są dane otrzymywane z analizatora Pentra 2 używanego m.in. we Wrocławskim RCKiK. Pozwala to na łatwe śledzenie zmian zachodzących w składzie krwi na przestrzeni czasu. Ukazywane są także wartości brzegowe względem stosunkowego mężczyzny. Przykład wykresu najduje się poniżej.
 
 ![Morfologia - przykład](https://i.imgur.com/bj7rkjE.png)
 
