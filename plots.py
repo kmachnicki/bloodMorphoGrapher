@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from sys import exit
 from csv import DictReader
 from matplotlib import rcParams
+from argparse import ArgumentParser
 
 rcParams["font.family"] = "Liberation Sans"
 rcParams["font.sans-serif"] = ["Liberation Sans"]
@@ -221,10 +222,20 @@ def draw_leukocytes_and_plasma(morphology, show_only):
     output(plt, show_only, title)
 
 if __name__ == "__main__":
+    parser = ArgumentParser()
+    parser.add_argument("-f", type=str, required=False, help="Input data csv filename")
+    parser.add_argument("-s", action="store_true", required=False, help="Show data without saving")
+    args = parser.parse_args()
+
+    if args.f is not None:
+        input_filename = args.f
+    else:
+        input_filename = "./data.csv"
+
+    show_only = args.s
+
     morphology = Morphology()
-    input_filename = "./data.csv"
     morphology.read_data(input_filename)
-    show_only = False
     draw_first_part_of_erythrocytes(morphology, show_only)
     draw_second_part_of_erythrocytes(morphology, show_only)
     draw_third_part_of_erythrocytes(morphology, show_only)
