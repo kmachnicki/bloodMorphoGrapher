@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from sys import exit
 from csv import DictReader
 from matplotlib import rcParams
 
@@ -53,15 +54,49 @@ class Morphology(object):
     def get_probe(self, probe_name):
         return self.probes[probe_name]
 
+    def get_probes_size(self):
+        probes_size = []
+        for probe in self.probes.values():
+            probes_size.append(len(probe.data_samples))
+        return probes_size
+
+    def is_data_complete(self):
+        return all(probe_size == len(self.dates) for probe_size in self.get_probes_size())
+
+    def is_data_empty(self):
+        return len(self.dates) == 0
+
+    def file_not_found_error(self, filename):
+        print("File %s not found. Will now exit." % filename)
+        exit()
+
+    def incomplete_data_error(self, filename):
+        print("File %s contains incomplete data - either uneven number of probes or missing some parameter.\n"
+            "Please check if it contains even number of probes for every parameter." % filename)
+        exit()
+
+    def empty_data_error(self, filename):
+        print("File %s seems to be empty or is missing a header row with parameters' name" % filename)
+        exit()
+
     def read_data(self, filename):
-        with open(filename, "r", newline="", encoding="utf8") as csv_file:
-            reader = DictReader(csv_file, delimiter=';')
-            for row in reader:
-                for (key, val) in row.items():
-                    if key == "dates":
-                        self.dates.append(val)
-                    elif key in self.probes:
-                        self.probes.get(key).add_data_sample(float(val))
+        try:
+            with open(filename, "r", newline="", encoding="utf8") as csv_file:
+                reader = DictReader(csv_file, delimiter=";")
+                for row in reader:
+                    for (key, val) in row.items():
+                        if key == "date":
+                            self.dates.append(val)
+                        elif key in self.probes:
+                            self.probes.get(key).add_data_sample(float(val))
+            if self.is_data_empty():
+                self.empty_data_error(filename)
+            if not self.is_data_complete():
+                self.incomplete_data_error(filename)
+        except (OSError, IOError):
+            self.file_not_found_error(filename)
+        except TypeError:
+            self.incomplete_data_error(filename)
 
 def draw(ax, data, data_limits, ylabel, unit, labels, title=None):
     y = list(range(0, len(data)))
@@ -89,7 +124,7 @@ def output(plt, show_only, filename):
     if show_only is True:
         plt.show()
     else:
-        plt.savefig(u"%s.pdf" % (filename), bbox_inches='tight')
+        plt.savefig(u"%s.pdf" % (filename), bbox_inches="tight")
 
 def draw_first_part_of_erythrocytes(morphology, show_only):
     f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
@@ -104,7 +139,7 @@ def draw_first_part_of_erythrocytes(morphology, show_only):
     draw(ax2, HGB.data_samples, HGB.data_limits, HGB.data_name, HGB.data_unit, morphology.dates)
     draw(ax3, HCT.data_samples, HCT.data_limits, HCT.data_name, HCT.data_unit, morphology.dates)
 
-    f.suptitle(u"%s\n%s\n%s" % (RBC, HGB, HCT), fontsize=12, fontweight='bold')
+    f.suptitle(u"%s\n%s\n%s" % (RBC, HGB, HCT), fontsize=12, fontweight="bold")
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
     fig.set_size_inches(8, 8)
@@ -122,7 +157,7 @@ def draw_second_part_of_erythrocytes(morphology, show_only):
     draw(ax1, MCV.data_samples, MCV.data_limits, MCV.data_name, MCV.data_unit, morphology.dates)
     draw(ax2, MCH.data_samples, MCH.data_limits, MCH.data_name, MCH.data_unit, morphology.dates)
 
-    f.suptitle(u"%s\n%s" % (MCV, MCH), fontsize=12, fontweight='bold')
+    f.suptitle(u"%s\n%s" % (MCV, MCH), fontsize=12, fontweight="bold")
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
     fig.set_size_inches(8, 8)
@@ -140,7 +175,7 @@ def draw_third_part_of_erythrocytes(morphology, show_only):
     draw(ax1, MCHC.data_samples, MCHC.data_limits, MCHC.data_name, MCHC.data_unit, morphology.dates)
     draw(ax2, RDW.data_samples, RDW.data_limits, RDW.data_name, RDW.data_unit, morphology.dates)
 
-    f.suptitle(u"%s\n%s" % (MCHC, RDW), fontsize=12, fontweight='bold')
+    f.suptitle(u"%s\n%s" % (MCHC, RDW), fontsize=12, fontweight="bold")
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
     fig.set_size_inches(8, 8)
@@ -160,7 +195,7 @@ def draw_thrombocytes(morphology, show_only):
     draw(ax2, PDW.data_samples, PDW.data_limits, PDW.data_name, PDW.data_unit, morphology.dates)
     draw(ax3, MPV.data_samples, MPV.data_limits, MPV.data_name, MPV.data_unit, morphology.dates)
 
-    f.suptitle(u"%s\n%s\n%s" % (PLT, PDW, MPV), fontsize=12, fontweight='bold')
+    f.suptitle(u"%s\n%s\n%s" % (PLT, PDW, MPV), fontsize=12, fontweight="bold")
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
     fig.set_size_inches(8, 8)
@@ -178,7 +213,7 @@ def draw_leukocytes_and_plasma(morphology, show_only):
     draw(ax1, WBC.data_samples, WBC.data_limits, WBC.data_name, WBC.data_unit, morphology.dates)
     draw(ax2, PCT.data_samples, PCT.data_limits, PCT.data_name, PCT.data_unit, morphology.dates)
 
-    f.suptitle(u"%s\n%s" % (WBC, PCT), fontsize=12, fontweight='bold')
+    f.suptitle(u"%s\n%s" % (WBC, PCT), fontsize=12, fontweight="bold")
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
     fig.set_size_inches(8, 8)
