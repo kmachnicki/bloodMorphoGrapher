@@ -1,31 +1,15 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
-from matplotlib import rcParams
 import matplotlib.pyplot as plt
+
+from csv import DictReader
+from matplotlib import rcParams
 
 rcParams['font.family'] = 'Liberation Sans'
 rcParams['font.sans-serif'] = ['Liberation Sans']
 rcParams['text.latex.unicode'] = True
 plt.style.use('classic')
-
-RBC_data = [5.04, 5.58, 5.08, 4.96]
-HGB_data = [13, 15.4, 15.4, 15.5]
-HCT_data = [39.7, 47, 46.1, 45.5]
-
-MCV_data = [79, 84, 91, 92]
-MCH_data = [25.9, 27.6, 30.2, 31.3]
-MCHC_data = [32.8, 32.8, 33.3, 34.1]
-RDW_data = [17.4, 18.4, 14.5, 13.6]
-
-PLT_data = [220, 230, 206, 180]
-PDW_data = [18, 18.8, 18, 17.8]
-MPV_data = [9.5, 9.5, 9.3, 9.2]
-
-WBC_data = [3.8, 4.6, 5.1, 4.3]
-PCT_data = [0.2, 0.2, 0.2, 0.2]
-
-dates = ["18.12.17", "05.02.18", "04.04.18", "06.06.18"]
 
 class Probe(object):
     def __init__(self, data_name, data_unit, data_limits, data_description):
@@ -49,6 +33,7 @@ class Probe(object):
 
 class Morphology(object):
     def __init__(self):
+        self.dates = []
         self.probes = {
             "RBC": Probe("RBC", "[mln/µl]", [4.5, 5.9], "iii"),
             "HGB": Probe("HGB", "[g/dl]", [13.5, 18.5], "iii"),
@@ -68,11 +53,14 @@ class Morphology(object):
         return self.probes[probe_name]
 
     def read_data(self, filename):
-        with open(filename, "r") as opened_file:
-            for file_line in opened_file:
-                for element in file_line.split(";"):
-                    pass
-                    #print(element)
+        with open(filename, "r", newline="", encoding="utf8") as csv_file:
+            reader = DictReader(csv_file, delimiter=';')
+            for row in reader:
+                for (key, val) in row.items():
+                    if key == "dates":
+                        self.dates.append(val)
+                    elif key in self.probes:
+                        self.probes.get(key).add_data_sample(float(val))
 
 def draw(ax, data, data_limits, ylabel, unit, labels, title=None):
     y = list(range(0, len(data)))
@@ -111,9 +99,9 @@ def draw_first_part_of_erythrocytes(morphology, show_only):
     HGB = morphology.get_probe("HGB")
     HCT = morphology.get_probe("HCT")
     
-    draw(ax1, RBC_data, RBC.data_limits, RBC.data_name, RBC.data_unit, dates, title)
-    draw(ax2, HGB_data, HGB.data_limits, HGB.data_name, HGB.data_unit, dates)
-    draw(ax3, HCT_data, HCT.data_limits, HCT.data_name, HCT.data_unit, dates)
+    draw(ax1, RBC.data_samples, RBC.data_limits, RBC.data_name, RBC.data_unit, morphology.dates, title)
+    draw(ax2, HGB.data_samples, HGB.data_limits, HGB.data_name, HGB.data_unit, morphology.dates)
+    draw(ax3, HCT.data_samples, HCT.data_limits, HCT.data_name, HCT.data_unit, morphology.dates)
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
@@ -129,8 +117,8 @@ def draw_second_part_of_erythrocytes(morphology, show_only):
     MCV = morphology.get_probe("MCV")
     MCH = morphology.get_probe("MCH")
     
-    draw(ax1, MCV_data, MCV.data_limits, MCV.data_name, MCV.data_unit, dates, title)
-    draw(ax2, MCH_data, MCH.data_limits, MCH.data_name, MCH.data_unit, dates)
+    draw(ax1, MCV.data_samples, MCV.data_limits, MCV.data_name, MCV.data_unit, morphology.dates, title)
+    draw(ax2, MCH.data_samples, MCH.data_limits, MCH.data_name, MCH.data_unit, morphology.dates)
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
@@ -146,8 +134,8 @@ def draw_third_part_of_erythrocytes(morphology, show_only):
     MCHC = morphology.get_probe("MCHC")
     RDW = morphology.get_probe("RDW")
     
-    draw(ax1, MCHC_data, MCHC.data_limits, MCHC.data_name, MCHC.data_unit, dates, title)
-    draw(ax2, RDW_data, RDW.data_limits, RDW.data_name, RDW.data_unit, dates)
+    draw(ax1, MCHC.data_samples, MCHC.data_limits, MCHC.data_name, MCHC.data_unit, morphology.dates, title)
+    draw(ax2, RDW.data_samples, RDW.data_limits, RDW.data_name, RDW.data_unit, morphology.dates)
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
@@ -164,9 +152,9 @@ def draw_thrombocytes(morphology, show_only):
     PDW = morphology.get_probe("PDW")
     MPV = morphology.get_probe("MPV")
     
-    draw(ax1, PLT_data, PLT.data_limits, PLT.data_name, PLT.data_unit, dates, title)
-    draw(ax2, PDW_data, PDW.data_limits, PDW.data_name, PDW.data_unit, dates)
-    draw(ax3, MPV_data, MPV.data_limits, MPV.data_name, MPV.data_unit, dates)
+    draw(ax1, PLT.data_samples, PLT.data_limits, PLT.data_name, PLT.data_unit, morphology.dates, title)
+    draw(ax2, PDW.data_samples, PDW.data_limits, PDW.data_name, PDW.data_unit, morphology.dates)
+    draw(ax3, MPV.data_samples, MPV.data_limits, MPV.data_name, MPV.data_unit, morphology.dates)
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
@@ -182,8 +170,8 @@ def draw_leukocytes_and_plasma(morphology, show_only):
     WBC = morphology.get_probe("WBC")
     PCT = morphology.get_probe("PCT")
     
-    draw(ax1, WBC_data, WBC.data_limits, WBC.data_name, WBC.data_unit, dates, title)
-    draw(ax2, PCT_data, PCT.data_limits, PCT.data_name, PCT.data_unit, dates)
+    draw(ax1, WBC.data_samples, WBC.data_limits, WBC.data_name, WBC.data_unit, morphology.dates, title)
+    draw(ax2, PCT.data_samples, PCT.data_limits, PCT.data_name, PCT.data_unit, morphology.dates)
 
     f.subplots_adjust(hspace=0.1)
     fig = plt.gcf()
@@ -193,9 +181,9 @@ def draw_leukocytes_and_plasma(morphology, show_only):
 
 if __name__ == "__main__":
     morphology = Morphology()
-    #input_filename = "./data.txt"
-    #morpho.read_data(input_filename)
-    show_only = True
+    input_filename = "./data.csv"
+    morphology.read_data(input_filename)
+    show_only = False
     draw_first_part_of_erythrocytes(morphology, show_only)
     draw_second_part_of_erythrocytes(morphology, show_only)
     draw_third_part_of_erythrocytes(morphology, show_only)
