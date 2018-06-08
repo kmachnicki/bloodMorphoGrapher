@@ -106,3 +106,4 @@ venv.bak/
 # input and output data
 *.pdf
 *.csv
+*.txt
