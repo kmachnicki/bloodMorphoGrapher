@@ -15,7 +15,8 @@ class Drawer(object):
         self.morphology = morphology
         self.show_only = show_only
 
-    def draw(self, ax, data, data_limits, ylabel, unit, labels, title=None):
+    @staticmethod
+    def draw(ax, data, data_limits, ylabel, unit, labels, title=None):
         y = list(range(0, len(data)))
         ax.plot(y, data, "bo--")
         ax.plot((-1, 100), (data_limits[0], data_limits[0]), "g-", linewidth=2,
@@ -41,7 +42,9 @@ class Drawer(object):
         if self.show_only is True:
             plt.show()
         else:
-            plt.savefig(u"%s.pdf" % (filename), bbox_inches="tight")
+            pdf_filename = u"%s.pdf" % filename
+            plt.savefig(pdf_filename, bbox_inches="tight")
+            print("File saved as %s" % pdf_filename)
 
     def draw_plots(self):
         self.draw_first_part_of_erythrocytes()

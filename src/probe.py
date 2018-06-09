@@ -33,7 +33,8 @@ class Probe(object):
         return u"%s - %s" % (self.name, self.description)
 
     def __repr__(self):
-        return u"%s: %s-%s %s - %s" % (self.name, str(self.limits[0]), str(self.limits[1]), self.unit, self.description)
+        return u"%s: %s-%s %s - %s" % (self.name, str(self.limits_men[0]), str(self.limits_men[1]),
+                                       self.unit, self.description)
 
     def __eq__(self, other):
         return self.name == other.name

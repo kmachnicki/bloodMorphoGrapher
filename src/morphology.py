@@ -41,16 +41,19 @@ class Morphology(object):
     def is_data_empty(self):
         return len(self.dates) == 0
 
-    def file_not_found_error(self, filename):
+    @staticmethod
+    def file_not_found_error(filename):
         print("File %s not found. Will now exit." % filename)
         exit()
 
-    def incomplete_data_error(self, filename):
+    @staticmethod
+    def incomplete_data_error(filename):
         print("File %s contains incomplete data - either uneven number of probes or missing some parameter.\n"
             "Please check if it contains even number of probes for every parameter." % filename)
         exit()
 
-    def empty_data_error(self, filename):
+    @staticmethod
+    def empty_data_error( filename):
         print("File %s seems to be empty or is missing a header row with parameters' name" % filename)
         exit()
 
