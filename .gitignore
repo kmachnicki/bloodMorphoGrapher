@@ -103,6 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# Pycharm project
+.idea
+
 # input and output data
 *.pdf
 *.csv
