@@ -30,7 +30,8 @@ class Window(Frame):
         self.root.config(menu=menu_bar)
 
         file_menu = Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="Choose other input csv file", command=self.choose_csv_file)
+        file_menu.add_command(label="Choose other input CSV file", command=self.choose_csv_file)
+        file_menu.add_command(label="Choose parsed OCR file to fill data", command=self.process_ocr_file)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.root.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
@@ -57,7 +58,7 @@ class Window(Frame):
         button_frame = Frame(self.root)
         button_frame.pack(side=TOP)
 
-        save_button = Button(button_frame, text="Add data to csv", command=self.save_to_csv)
+        save_button = Button(button_frame, text="Add data to CSV", command=self.save_to_csv)
         save_button.grid(row=0, column=1, padx=5, pady=5)
 
     def create_status_bar(self):
@@ -66,11 +67,7 @@ class Window(Frame):
         self.update_status_bar()
 
     def update_status_bar(self):
-        self.status_bar_text.set(u"Selected csv: %s" % self.csv_filename)
-
-    def choose_csv_file(self):
-        self.csv_filename = askopenfilename(parent=self.root)
-        self.update_status_bar()
+        self.status_bar_text.set(u"Selected CSV: %s" % self.csv_filename)
 
     def show_help_window(self):
         help_window = Toplevel(self.root)
@@ -81,6 +78,31 @@ class Window(Frame):
         about_window = Toplevel(self.root)
         button = Button(about_window, text="TODO2")
         button.pack()
+
+    def choose_csv_file(self):
+        self.csv_filename = askopenfilename(parent=self.root)
+        self.update_status_bar()
+
+    @staticmethod
+    def replace_entry_value(entry, value):
+        if value is not None:
+            entry.delete(0, END)
+            entry.insert(0, value)
+
+    def process_ocr_file(self):
+        ocr_filename = askopenfilename(parent=self.root)
+        with open(ocr_filename, "r") as ocr_file:
+            ocr_data = ocr_file.read()
+            date_match = re.search("(?:Data \D*: )(\d{2}-\d{2}-\d{4})", ocr_data)
+            if date_match is not None:
+                extracted_date = date_match.group(1)
+                self.replace_entry_value(self.data["date"], extracted_date)
+            for (key, input_field) in self.data.items():
+                if key != "date":
+                    parameter_match = re.search("(?:%s \[\D*\] )(\d{1,4}.?\d{1,4})" % key, ocr_data)
+                    if parameter_match is not None:
+                        extracted_value = parameter_match.group(1)
+                        self.replace_entry_value(input_field, extracted_value)
 
     def is_data_valid(self):
         try:
@@ -101,7 +123,7 @@ class Window(Frame):
 
     def save_to_csv(self):
         if self.is_data_valid():
-            row_values = {key: input_field.get().replace(",", ".") for key, input_field in self.data.items()}
+            row_values = {key: input_field.get().replace(",", ".") for (key, input_field) in self.data.items()}
             self.save_data(row_values)
             messagebox.showinfo("Info", "Saved to a file.")
         else:
