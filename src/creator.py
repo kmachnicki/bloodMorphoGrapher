@@ -71,17 +71,29 @@ class Window(Frame):
 
     def show_help_window(self):
         help_window = Toplevel(self.root)
-        button = Button(help_window, text="TODO1")
+        help_window.title("Help")
+        message = "Creator adds provided data into a default data.csv file and creates it if it's non-existent.\n\n" \
+                  "You can choose different file in the File menu.\n\n" \
+                  "There you can also choose a text file from any OCR software to fill data fields for you."
+        help_message = Message(help_window, width=300, text=message)
+        help_message.pack()
+        button = Button(help_window, text="Close", command=help_window.destroy)
         button.pack()
 
     def show_about_window(self):
         about_window = Toplevel(self.root)
-        button = Button(about_window, text="TODO2")
+        about_window.title("About")
+        message = "Project page:\nhttps://github.com/kmachnicki/bloodMorphoGrapher"
+        about_message = Message(about_window, width=300, text=message)
+        about_message.pack()
+        button = Button(about_window, text="Close", command=about_window.destroy)
         button.pack()
 
     def choose_csv_file(self):
-        self.csv_filename = askopenfilename(parent=self.root)
-        self.update_status_bar()
+        new_filename = askopenfilename(parent=self.root)
+        if new_filename != "":
+            self.csv_filename = new_filename
+            self.update_status_bar()
 
     @staticmethod
     def replace_entry_value(entry, value):
@@ -91,18 +103,19 @@ class Window(Frame):
 
     def process_ocr_file(self):
         ocr_filename = askopenfilename(parent=self.root)
-        with open(ocr_filename, "r") as ocr_file:
-            ocr_data = ocr_file.read()
-            date_match = re.search("(?:Data \D*: )(\d{2}-\d{2}-\d{4})", ocr_data)
-            if date_match is not None:
-                extracted_date = date_match.group(1)
-                self.replace_entry_value(self.data["date"], extracted_date)
-            for (key, input_field) in self.data.items():
-                if key != "date":
-                    parameter_match = re.search("(?:%s \[\D*\] )(\d{1,4}.?\d{1,4})" % key, ocr_data)
-                    if parameter_match is not None:
-                        extracted_value = parameter_match.group(1)
-                        self.replace_entry_value(input_field, extracted_value)
+        if ocr_filename != "":
+            with open(ocr_filename, "r") as ocr_file:
+                ocr_data = ocr_file.read()
+                date_match = re.search("(?:Data \D*: )(\d{2}-\d{2}-\d{4})", ocr_data)
+                if date_match is not None:
+                    extracted_date = date_match.group(1)
+                    self.replace_entry_value(self.data["date"], extracted_date)
+                for (key, input_field) in self.data.items():
+                    if key != "date":
+                        parameter_match = re.search("(?:%s \[\D*\] )(\d{1,4}.?\d{1,4})" % key, ocr_data)
+                        if parameter_match is not None:
+                            extracted_value = parameter_match.group(1)
+                            self.replace_entry_value(input_field, extracted_value)
 
     def is_data_valid(self):
         try:
