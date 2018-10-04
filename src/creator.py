@@ -12,7 +12,8 @@ class Window(Frame):
         self.csv_filename = "./data.csv"
         self.data = {}
         self.status_bar_text = StringVar()
-        self.header = ["date", "RBC", "HGB", "HCT", "MCV", "MCH", "MCHC", "RDW", "PLT", "PDW", "MPV", "WBC", "PCT"]
+        self.header = ["date", "RBC", "HGB", "HCT", "MCV", "MCH", "MCHC", "RDW", "PLT", "PDW", "MPV", "WBC", "PCT",
+                       "LYM%", "MON%", "NEU%", "BAS%", "EOS%", "LYM", "MON", "NEU", "BAS", "EOS", "ALY", "ALY%", "LIC"]
 
         Frame.__init__(self, self.root)
         self.set_up_root_properties()
