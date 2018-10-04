@@ -21,6 +21,19 @@ class Morphology(object):
             "MPV": Probe("MPV", "[fl]", [6, 11], [6, 11], u"Średnia objętość trombocytu"),
             "WBC": Probe("WBC", "[tys/µl]", [3.8, 10.5], [3.8, 10.5], u"Ilość białych krwinek (leukocytów)"),
             "PCT": Probe("PCT", "[%]", [0.2, 0.5], [0.2, 0.5], u"Poziom prokalcytoniny (białka tarczycy) w osoczu krwi"),
+            "LYM%": Probe("LYM%", "[%]", [18, 44], [18, 44], u"Procentowy udział limfocytów w leukocytach"),
+            "MON%": Probe("MON%", "[%]", [2.8, 10.4], [2.8, 10.4], u"Procentowy udział monocytów w leukocytach"),
+            "NEU%": Probe("NEU%", "[%]", [49.5, 77], [49.5, 77], u"Procentowy udział neutrofili w leukocytach"),
+            "BAS%": Probe("BAS%", "[%]", [0.0, 3.0], [0.0, 3.0], u"Procentowy udział bazofili w leukocytach"),
+            "EOS%": Probe("EOS%", "[%]", [0.7, 6.5], [0.7, 6.5], u"Procentowy udział eozynofili w leukocytach"),
+            "LYM": Probe("LYM", "[tys/µl]", [0.9, 4.4], [0.9, 4.4], u"Ilościowy udział limfocytów w leukocytach"),
+            "MON": Probe("MON", "[tys/µl]", [0.1, 1.3], [0.1, 1.3], u"Ilościowy udział monocytów w leukocytach"),
+            "NEU": Probe("NEU", "[tys/µl]", [1.8, 8.25], [1.8, 8.25], u"Ilościowy udział neutrofili w leukocytach"),
+            "BAS": Probe("BAS", "[tys/µl]", [0, 0.3], [0, 0.3], u"Ilościowy udział bazofili w leukocytach"),
+            "EOS": Probe("EOS", "[tys/µl]", [0, 0.65], [0, 0.65], u"Ilościowy udział eozynofili w leukocytach"),
+            "ALY%": Probe("ALY%", "[%]", [0, 2.0], [0, 2.0], u"Procent limfocytów atypowych (reaktywnych)"),
+            "ALY": Probe("ALY", "[tys/µl]", [0, 0.25], [0, 0.25], u"Ilość limfocytów atypowych (reaktywnych)"),
+            "LIC": Probe("LIC", "[tys/µl]", [0, 0.3], [0, 0.3], u"Ilość dużych niedojrzałych komórek (limfoblastów)"),
             }
 
     def get_probe(self, probe_name):

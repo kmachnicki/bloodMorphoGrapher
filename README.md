@@ -19,6 +19,19 @@ Wizualizowane dane:
 * **MPV** *[fl]* - Średnia objętość trombocytu
 * **WBC** *[tys/µl]* - Ilość białych krwinek (leukocytów)
 * **PCT** *[%]* - Poziom prokalcytoniny (białka tarczycy) w osoczu krwi
+* **LYM** *[%]* - Procentowy udział limfocytów w leukocytach
+* **MON** *[%]* - Procentowy udział monocytów w leukocytach
+* **NEU** *[%]* - Procentowy udział neutrofili w leukocytach
+* **BAS** *[%]* - Procentowy udział bazofili w leukocytach
+* **EOS** *[%]* - Procentowy udział eozynofili w leukocytach
+* **LYM** *[tys/µl]* - Ilościowy udział limfocytów w leukocytach
+* **MON** *[tys/µl]* - Ilościowy udział monocytów w leukocytach
+* **NEU** *[tys/µl]* - Ilościowy udział neutrofili w leukocytach
+* **BAS** *[tys/µl]* - Ilościowy udział bazofili w leukocytach
+* **EOS** *[tys/µl]* - Ilościowy udział eozynofili w leukocytach
+* **ALY** *[%]* - Procent limfocytów atypowych (reaktywnych)
+* **ALY** *[tys/µl]* - Ilość limfocytów atypowych (reaktywnych)
+* **LIC** *[tys/µl]* - Ilość dużych niedojrzałych komórek (limfoblastów)
 
 Po uruchomieniu programu wygenerowane wykresy zostaną automatycznie zapisane do folderu z modułem wykonywalnym.
 
